@@ -48,3 +48,14 @@ plot(mass_Gt ~ decimal_date,
     type="l", xlab="", ylab="")
 
 # review class recording here - missed some lines of code and transition
+
+# start 1/29 code - still need to go back and fill in gaps
+
+# n(ant_ice_loss$mass_Gt)
+# min(grn_ice_loss
+
+
+# lines(
+ #   mass_Gt ~ decimal_date
+# )
+
