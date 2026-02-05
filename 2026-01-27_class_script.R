@@ -1,4 +1,4 @@
-#2026-01-27 ; class script
+# 2026-01-27 ; class script
 
 # read in data - using the relative path
 ant_ice_loss = read.table(file = "data/antarctica_mass_200204_202505.txt",
