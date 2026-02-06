@@ -110,3 +110,23 @@ if(temp > 98.6) {
 # } else {
 #  print("something is wrong with your data...")
 # }
+
+# ifelse() - related fx, works just like if/else but condenses into 1 line of code
+# takes 3 arguements - a logical and 2 possible answers - it also works on vectors!!!
+# ifelse() examines ea entry of the logical vector and returns elements from the vector provided
+# in the 2nd arguement, if the entry is TRUE, or elements from the vector provided in the 3rd arguement
+# if entry is FALSE
+
+# calculate reciprocals
+a = 0
+ifelse(test = a != 0, yes = 1/a, no = NA)
+
+
+a = c(0, 1, 2, -4, 5)
+ifelse(test = a != 0, yes = 1/a, no = NA)
+cbind(a)
+
+reciprocals = ifelse(test = a != 0, yes = 1/a, no = NA)
+cbind(a, reciprocals)
+
+
