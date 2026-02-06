@@ -129,3 +129,42 @@ for( i in seq(num)){
   print(factorial_result)
 }
 factorial_result
+
+# cont. 2026-02-05
+
+# nesting for loops
+
+mat = matrix(c(2,0,8,3,5,-4), nrow = 2, ncol = 3)
+mat
+mat_squared = matrix(rep(NA, 6), nrow = 2, ncol = 3)
+
+dim(mat)
+for(i in seq(dim(mat)[1])){
+  for (j in seq(dim(mat)[2])){
+    print(paste("I'm on row: ", i, " and column: ", j))
+    mat_squared[i,j] = mat[i,j]^2
+  }
+}
+mat_squared
+
+# while loops - when you don't know how many times you'll repeat a task
+
+x = 5
+while(x > 0){
+  x = x - 1
+}
+
+# fish catching game - max fish weight limit = 50 , fish until you reach the condition
+
+total_catch_lb = 0
+n_fish = 0
+while(total_catch_lb < 50){ #keep fishing
+ new_fish_weight = rnorm(n = 1, mean = 2, sd = 1)
+ total_catch_lb = total_catch_lb + new_fish_weight
+ n_fish = n_fish + 1
+ print(paste("n fish = ", n_fish, "and new fish weight = ", new_fish_weight))
+}
+n_fish
+total_catch_lb
+new_fish_weight
+
