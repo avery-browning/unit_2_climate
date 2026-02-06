@@ -1,9 +1,9 @@
 # 2026-02-03 class script
 # Mauna loa CO2 data from NASA
 
-url = 'ftp://aftp.cmdl.noaa.gov/products/trends/co2/co2_mm_mlo.txt'
+url = 'unit_2_climate/data/co2_mm_mlo.txt'
 
-co2 = read.table(file = url, col.names = c(
+co2 = read.table(url, col.names = c(
                 "year", 
                 "month", 
                 "decimal_date",
@@ -12,32 +12,97 @@ co2 = read.table(file = url, col.names = c(
                 "n_days", 
                 "st_dev_days", 
                 "monthly_mean_uncertainty"))
+
+# read.table auto skips lines that start with the comment char #, so we don't 
+# have to manually pass a param to tell the fx to skip the header
+class(co2)
+head(co2)
 summary(co2)
+
+# where does the time series start and end? What is the max co2 recorded at Mauna Loa?
 range(co2$decimal_date)
 range(co2$monthly_average)
 
 # plot it!
 plot(monthly_average ~ decimal_date, data=co2, type="l")
+
+# NASA provided the de-seasonalized data - i.e., they removed the monthly cycle so that
+# we can see the trend over time more easily - plot the de-seasonalized data over the 
+# monthly avg data
+plot(monthly_average ~ decimal_date, type = 'l', data = co2, ylab="CO2 ppm", xlab="Year", main="Keeling Curve")
 lines(deseasonalized ~ decimal_date, data=co2, col="red")
 
-co2$seasonal_cycle = co2$monthly_average - co2$deseasonalized
+# save figure
+pdf('unit_2_climate/figures/keelingCurve.pdf', width=7, height=5)
+plot(monthly_average ~ decimal_date, type='l', data = co2, ylab='CO2 ppm', xlab='Year', main='Keeling Curve')
+lines(y=co2$deseasonalized, x=co2$decimal_date, col='red')
+dev.off()
+
+# examine seasonality of co2 data
+
+co2$seasonal_cycle = co2$monthly_average - co2$deseasonalized # calc detrended co2 flux
 head(co2)
 
 plot(seasonal_cycle ~ decimal_date, data = co2, type = "l")
 
-# grab most recent 5 years and plot it 
+# subset and grab most recent 5 years and plot it 
 
+# subsetting refresher
+# 2 ways to get the 3rd row of the 1st column:
+co2[1,3]
+co2$year[3]
+
+# 2 ways to get the whole 2nd col
+co2[, 2]
+co2$month
+
+# 2 ways to get the first 6 rows of every col
+co2[c(1:6),]
+head(co2)
+
+# to subset the data, we can write a boolean expression to create a vector of logical variables
+# we can also use the which() function to return just the indices of the elements in the vec
+# that meet some logical criteria
+# there are still other ways to subset, including using the subset() fx or using filter()
+# in the dplyr package
+
+
+# to grab the last 5 years, we only want values of co2$decimal_date greater than 2021
+# we can use a conditional statement > to signal values greater than 2021
+
+# 2 ways to subset this
+summary(co2$decimal_date . 2021) # vector of TRUES and FALSES
+
+summary(which(co2$decimal_date > 2021)) # vector of indices that meet condition
+
+# either can be used
 co2_2021to2026 = co2[co2$decimal_date > 2021, ]
 summary(co2_2021to2026)
 
 plot(seasonal_cycle ~ decimal_date, data = co2_2021to2026, type = "l")
 
-jan_anomalies = mean(co2$seasonal_cycle[co2$month == 1])
-jan_anomalies
+# it's hard to see which month is which on this plot - make a table that
+# shows the avg co2 anomaly for ea month over the time series
+# we can calc the monthly anomaly for January by subsetting only data where month==1
+# and then taking the mean of our seasonal_cycle variable
+
+# 2 ways to grab seasonal_cycle data only from the month of January
+# jan_anomalies = co2[which(co2$month==1), 'seasonal_cycle']
+jan_anomalies = co2$seasonal_cycle[which(co2$month==1)]
+
+# calc the mean
+mean(jan_anomalies)
+
+# calc the avg monthly anomaly for all 12 months - to do this, let's make a new data.frame to hold results
+# it should have 2 cols - one for month, one for avg anomaly for that month
+# then we can calc the avg anomaly for ea month and insert it in the right spot in the data.frame
+
+head(co2)
+
 
 # create a data frame with monthly detrended co2 anomalies
 co2_monthly_cycle = data.frame(month = seq(12), detrended_monthly_cycle = NA)
-co2_monthly_cycle
+head(co2_monthly_cycle)
 
 #fill in the data
 co2_monthly_cycle$detrended_monthly_cycle[1] = mean(co2$seasonal_cycle[co2$month == 1])
@@ -60,7 +125,7 @@ co2_monthly_cycle$detrended_monthly_cycle[12] = mean(co2$seasonal_cycle[co2$mont
 co2_monthly_cycle
 plot(detrended_monthly_cycle ~ month, data = co2_monthly_cycle, type ="l", col = "navyblue")
 
-# what if you have a giant data set? Loops!
+# what if you have a GIANT data set? Loops!
 # if you have a task to complete 3 or more times, code it to repeat itself - helps to avoid mistakes
 
 # for loops - need to know how many times you want it to repeat -> "do this for every value of that"
@@ -70,8 +135,11 @@ plot(detrended_monthly_cycle ~ month, data = co2_monthly_cycle, type ="l", col =
 #  }
 
 # i is the classic name you use for the variable to step through your loop (iterand - what you are iterating)
+# each time the for loop ran is called an iteration
+
+c(1,2,3,4)
 for (i in c(1:4)){
-  print(i)
+  print(c("one run", i))
 }
 
 # i holds a memory of where it was last
@@ -81,12 +149,24 @@ for (word in sentence){
   print(word)
 }
 
+
+for(value in c("My", "second", "for", "loop")){
+  print(value)
+}
+
+
+# using the iterand as an index
+# the most common usage of a for loop is to create some iterand (often named i) that will step through
+# ea element inside in a vec and act on the elements of that vec in some way with the iterand acting 
+# as an element inside the loop
+
+# ex find the square of each value in your data
 my_vector = c(1,3,5,2,4)
 my_vector
 
 # task - square every element in the vector
 n_my_vector = length(my_vector)
-my_vector_squared = rep(NA, n_my_vector)
+my_vector_squared = rep(NA, n_my_vector) # initialize the results vector
 my_vector
 # now you have a space to square each of your values
 
@@ -97,7 +177,6 @@ for (i in seq(n_my_vector)){
 }
 my_vector_squared
 
-# ^ go back to video to check code
 
 # calculate total of a vector
 my_vector = c(1,3,5,2,4)
