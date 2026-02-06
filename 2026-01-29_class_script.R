@@ -19,12 +19,16 @@ c(1,2,3,4) %in% c(3,2,1)
 
 # returns T T T F
 
+# subsetting a data frame - depth > 4000 m 
 world_oceans2 = data.frame(oceans = c("Atlantic", "Pacific", "Indian", "Arctic", "Southern"), 
                           area_km2 = c(77e6, 156e6, 69e6, 14e6, 20e6), 
                           avg_depth_m = c(3926, 4028, 3963, 3953, 4500))
 world_oceans2
 
-world_oceans2[ world_oceans2$avg_depth_m > 4000, ]
+sum(world_oceans2$avg_depth_m > 4000) # counts all oceans with depth > 4000
+world_oceans2$oceans[world_oceans2$avg_depth_m > 4000] # returns only ocean names that meet the condition
+world_oceans2[ world_oceans2$avg_depth_m > 4000, ] # returns ocean names that meets the condition AND depths
+
 
 1 + 2 == 3
 0.1 + 0.2 == 0.3
@@ -38,7 +42,14 @@ world_oceans2[ world_oceans2$avg_depth_m > 4000, ]
 error_threshold = 0.001
 abs( (0.3 - 0.1 + 0.2 )) > error_threshold
 
-# boolean operators
+# boolean operators - placed bwt 2 logical tests; 
+
+# & -> synax: cond1 & cond2 -> Are both cond1 and cond2 true?
+# | -> synax: cond1 | cond2 -> Is one or more of cond1 and cond2 true?
+# xor -> synax: xor(cond1, cond2) -> Is exactly one of cond1 and cond2 true?
+# ! -> syntax: !cond1 -> Is cond1 false?
+# any -> syntax: any(cond1, cond2, cond3, ...) -> Are any of the conditions true?
+# all -> syntax: all(cond1, cond2, cond3, ...) -> Are all of the conditions true?
 
 x = 7
 x > 5 & x %in% c(1,2,3,7)
@@ -49,6 +60,7 @@ vec1 == vec2
 
 world_oceans2[ (world_oceans2$avg_depth_m > 4000) & world_oceans2$avg_km2 > 100e6 ]
 
+# is.na() tests whether a value is an NA
 vec2 = c(1,2,NA,4)
 2 %in% vec2
 NA %in% vec2
