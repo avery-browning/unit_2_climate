@@ -61,3 +61,5 @@ class(arctic_ice_averages$date)
 plot(Exten ~ date, data = arctic_ice, type = "l")
 lines(extent_annual_avg ~ date, data = arctic_ice_averages, type = "l", col = "red")
 lines(extent_5yr_avg ~ date, data = arctic_ice_averages, type = "l", col = "blue")
+
+# Exercise 6.1

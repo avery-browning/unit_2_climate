@@ -247,3 +247,10 @@ n_fish
 total_catch_lb
 new_fish_weight
 
+# Exercise 5.2
+# Use a while loop to build a simple number matching game. Pick a number between 1 and 10 outside of the
+# loop. Then, inside the loop, step through 1 to 10 and test if that iteration of the loop has guessed the
+# correct number. At the end, print out the number of guesses it took for your loop to guess the right
+# number. You could make this game fancier by stepping through random numbers inside the loop to guess
+# the right number using guess=round(runif(n=1, min=1, max=10))
+
