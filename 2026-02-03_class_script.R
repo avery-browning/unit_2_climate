@@ -71,7 +71,7 @@ head(co2)
 # we can use a conditional statement > to signal values greater than 2021
 
 # 2 ways to subset this
-summary(co2$decimal_date . 2021) # vector of TRUES and FALSES
+summary(co2$decimal_date > 2021) # vector of TRUES and FALSES
 
 summary(which(co2$decimal_date > 2021)) # vector of indices that meet condition
 
