@@ -1,8 +1,15 @@
 # 2026-01-29 class script
 
+# Do you remember R’s logical data type? To recap, you can select values with a vector of TRUEs and FALSEs.
+# The vector must be the same length as the dimension that you wish to subset. R will return every element
+# that matches a TRUE:
 vec = c(1,0,2,1)
 vec
 vec[ c(T,F,T,F)]
+
+# At first glance, this system might seem impractical. Who wants to type out long vectors of TRUEs and
+# FALSEs? No one. But you don’t have to. You can let a logical test create a vector of TRUEs and FALSEs for
+# you.
 
 3 == 3
 x = 156
@@ -13,19 +20,42 @@ x != y
 
 x %in% vec
 
+# %in% is the only operator that does not do normal element-wise execution. %in% tests whether the value(s)
+# on the left side are in the vector on the right side. If you provide a vector on the left side, %in% will not 
+# pair up the values on the left with the values on the right and then do element-wise tests. Instead, %in% will
+# independently test whether each value on the left is somewhere in the vector on the right
+
+
 # %in% is element wise - in our vector here, it asks the ele 4 times
 
 c(1,2,3,4) %in% c(3,2,1)
 
 # returns T T T F
 
+
+# Subsetting a data frame
+
+# Using the oceans data.frame that we built in an earlier class, we can subset the oceans with a depth >
+# 4000m. First we’ll test the condition against all ocean depths to find which indices meet the condition 
+# depth > 4000
 # subsetting a data frame - depth > 4000 m 
 world_oceans2 = data.frame(oceans = c("Atlantic", "Pacific", "Indian", "Arctic", "Southern"), 
                           area_km2 = c(77e6, 156e6, 69e6, 14e6, 20e6), 
                           avg_depth_m = c(3926, 4028, 3963, 3953, 4500))
 world_oceans2
 
+# Then we can use sum() to quickly count the number of TRUEs in the previous vector. R will coerce logicals
+# to numerics when you do math with them. R will turn TRUEs into ones and FALSEs into zeroes. As a result,
+# sum will count the number of TRUEs. Now we can add up the number of entries that met our criteria (and
+# therefore count the average depth variables > 4000m)
+
+
 sum(world_oceans2$avg_depth_m > 4000) # counts all oceans with depth > 4000
+
+# We can now use logical subsetting to print out the name of the oceans that meet our depth criteria. Since
+# the logical test that is performed on the avg_depth_m variable returns a logical vector, you can use it as an
+# index to find the corresponding ocean name variables: 
+
 world_oceans2$oceans[world_oceans2$avg_depth_m > 4000] # returns only ocean names that meet the condition
 world_oceans2[ world_oceans2$avg_depth_m > 4000, ] # returns ocean names that meets the condition AND depths
 
