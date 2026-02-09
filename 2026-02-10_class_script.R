@@ -123,3 +123,79 @@ my_awesome_function() # not a verb, or descriptive
 # long, but clear
 remove_na()
 plot_time_series()
+
+
+# 2.8 Global Temperature
+
+# Data from: http://climate.nasa.gov/vital-signs/global-temperature
+# Raw: https://data.giss.nasa.gov/gistemp/graphs/graph_data/Global_Mean_Estimates_based_on_Land_and_Ocean_Data/graph.txt
+
+# NASA’s Goddard Institute of Space Studies (outside Washington D.C.) has created an annual global land-ocean
+# temperature index. Many of the last years have set new records on global temperature. In this section 
+# we will download, explore and analyze global mean temperature data.
+
+
+
+
+# Evaluating the evidence for a “Pause” in warming?
+# The  2013 IPCC Report included a tentative observation of a “much smaller increasing trend” 
+# in global mean temperatures since 1998 than was observed previously. This led to much 
+# discussion in the media about the existence of a “Pause” or “Hiatus” in global warming rates, 
+# as well as much research looking into where the extra heat could have gone. (Examples discussing 
+# this question include articles in The Guardian, BBC News, and Wikipedia).
+
+
+
+
+# This example should give us some caution in how we subset our data when we are looking at trends, 
+# and how difficult it is to determine whether we are in the middle of a new pattern. If you draw 
+# a line between the 1998 and 2012 data points (which is probably when the 2013 IPCC report was 
+# finalized), it seems like warming patterns are slowing down. Grab the No_smoothing temperature 
+# values in those 2 years by subsetting with the which() function.
+
+
+
+# Now that we can see the 1998-2012 trend that was discussed in the 2013 IPCC report, it does seem 
+# like the rate of warming has slowed way down. However, now that we have the luxury of another 
+# decade of data, those dates seem completely cherry-picked and there is no observable slow-down to speak of.
+
+
+# Calculating rolling averages
+# In the last lesson we calculated annual averages and 5 year averages to get a smoother look at 
+# our data and be less susceptible to random perturbations. In that lesson, we defined the 5 year 
+# average as the average of the data from a given year along with the 2 years before and 2 years 
+# after (i.e. the 5-year rolling average of 2005 temperature = the temperature mean from 2003-2007).
+# Sometimes scientists calculate moving averages where they simply just look at the period prior to 
+# a given year. For example, we could define a 5 year average as the average over a given year and 
+# the 4 years prior (i.e. the 5-year rolling average of 2005 temperature = the average temperature 
+# from 2001-2005). Either definition is acceptable as long as you are explicit with which definition 
+# you are using. The advantage of calculating moving averages for an endpoint (instead of a midpoint) 
+# is that they are slightly simpler to calculate and you can provide averages up to the most current date. 
+# For this lesson, we’ll calculate moving averages using the simpler end-point definition.
+
+
+
+# Let’s create a user defined function that will calculate the moving average for any vector of 
+# numbers, and the user can choose what the size of the moving window will be (i.e. whether 
+# it will be a 1-year average, 5-year average, 10-year average, etc.).
+# -Define a 5 year average as the average over a given year and the 4 years prior.
+# -Construct 5 year averages from the annual data. Construct 10 & 20-year averages.
+# -Plot the different averages and describe what differences you see and why.
+
+
+
+
+# Exercise 8.1
+# Calculate the 10-year and 20-year rolling averages of the temperature anomaly data using our new 
+# user defined function calc_rolling_average. Plot the 5, 10 and 20 year rolling averages onto the 
+# same figure. How would you change the design of the function if you wanted it to calculate the 
+# moving average where the reference year was at the midpoint of the moving window, rather than 
+# the endpoint of the moving window?
+
+#Do you see the advantage of this? Once your rolling average user defined function has been 
+# written, you can repeat this type of calculation on any of your diverse datasets with a 
+# very easy-to-use line of code. To use this function in future code, you can copy and paste 
+# the function at the top of your new R scripts. Or you could save it in an .R script on its own 
+# and import that script at the top of any new R scripts that you build using the source() function. 
+# If you were really ambitious, you could put your function into a time series analysis package 
+# and make it available on CRAN.
