@@ -1,7 +1,7 @@
 # 2026-02-10_class_script 2.7 Defining Fxns
 # pre-class practice
 
-# Functions
+# Defining functions
 # consider writing a function whenever you've copied and pasted a block of code more than twice
 # an simple example is computing averages - we can compute the avg of a vec x using the 
 # sum() and length() fxns: sum(x)/length(x)
@@ -103,11 +103,63 @@ avg = function(x, arithmetic=TRUE){
 avg(FALSE)
 # returns ! Function failed. x must be a numeric
 
+# in-class script
+x=c(1,2,3,4)
+mean(x)
+
+avg = function(x){
+  s = sum(x)
+  n = length(x)
+  answer = s/n 
+  return(answer)
+}
+
+avg(x)
+
+avg(seq(from = 3, to = 500))
+
+# this fxn will calc the arith. mean by default, otherwise calc geomet. mean
+avg = function(x, arithmetic=TRUE){
+  if( !is.numeric(x)){
+    stop("x isn't numeric you dummy") # check
+  }
+  if(arithmetic){
+    result = sum(x)/length(x)
+   } else if (arithmetic == FALSE) { # assume user wants geometric mean
+      result = prod(x)^(1/length(x))
+   } else {
+      print("Unclear if you wanted an arithmetic mean")
+   }
+  return(result)
+}
+
+avg(x) # 2.5
+avg(x, arithmetic = FALSE) # 2.213364
+avg(arithmetic = F, x = seq(from = 5, to = 13)) #8.607887
+avg(FALSE, seq(from = 5, to = 13)) # error - R cannot interpret this
+avg(x, TRUE) # 2.5 - R assumed the order of the parameters was the same as the fxn
+avg("hi") # x isn't numeric you dummy
+
+
 # Exercise 7.1
-# Create a fxn that Create a function that reads in someone’s grade percentage points and returns 
+# Create a fxn that reads in someone’s grade percentage points and returns 
 # their letter grade (A: 90-100, B: 80-90, etc.). You can imagine how you could make this function 
 # fancier by including grading scheme info in the parameters to ask if the function user wanted to 
 # also know if the student earned a B+, B or B-.
+
+x = 85
+
+calc_letter_grade = function(x)
+letter_grade = {
+  if (x => 90) {
+    print("You got an A")
+  } else
+  if (x < 90 & x > 80) {
+    print("You got a B")
+  }
+}
+return(letter_grade)
+
 
 # Naming fxns
 # Generally, fxn names should be verbs, arguments should be nouns. There are some exceptions:
@@ -135,17 +187,26 @@ plot_time_series()
 # we will download, explore and analyze global mean temperature data.
 
 
+# NASA global temp index
 
+# if you use the online url instead of you're saved file, your data set will update as NASA updates
+url = "https://data.giss.nasa.gov/gistemp/graphs/graph_data/Global_Mean_Estimates_based_on_Land_and_Ocean_Data/graph.txt"
+temp_anomaly = read.delim(file = url, skip = 5, sep = "", header = FALSE,
+  col.names = c("Year", "No_Smoothing", "Lowess_5"))
+head(temp_anomaly)
+tail(temp_anomaly)
+summary(temp_anomaly)
+
+plot(No_Smoothing ~ Year, data = temp_anomaly, ylab="Global Temp Anomaly °C")
+lines(No_Smoothing ~ Year, data = temp_anomaly)
+lines(Lowess_5 ~ Year, data = temp_anomaly, col="red")
 
 # Evaluating the evidence for a “Pause” in warming?
-# The  2013 IPCC Report included a tentative observation of a “much smaller increasing trend” 
+# The 2013 IPCC Report included a tentative observation of a “much smaller increasing trend” 
 # in global mean temperatures since 1998 than was observed previously. This led to much 
 # discussion in the media about the existence of a “Pause” or “Hiatus” in global warming rates, 
 # as well as much research looking into where the extra heat could have gone. (Examples discussing 
 # this question include articles in The Guardian, BBC News, and Wikipedia).
-
-
-
 
 # This example should give us some caution in how we subset our data when we are looking at trends, 
 # and how difficult it is to determine whether we are in the middle of a new pattern. If you draw 
@@ -153,7 +214,12 @@ plot_time_series()
 # finalized), it seems like warming patterns are slowing down. Grab the No_smoothing temperature 
 # values in those 2 years by subsetting with the which() function.
 
-
+temp_1998 = temp_anomaly$No_Smoothing[temp_anomaly$Year == 1998]
+temp_2012 = temp_anomaly$No_Smoothing[temp_anomaly$Year == 2012]
+# 2012 b/c reports was published in 2013 but finalized in 2012
+abline(v = 1998, lty="dashed") # draws a line, v for vertical, h for horizontal
+abline(v = 2013, lty="dashed")
+lines(x = c(1998, 2012), y =c(temp_1998,temp_2012), col="blue", lwd = 3) 
 
 # Now that we can see the 1998-2012 trend that was discussed in the 2013 IPCC report, it does seem 
 # like the rate of warming has slowed way down. However, now that we have the luxury of another 
@@ -174,16 +240,34 @@ plot_time_series()
 # For this lesson, we’ll calculate moving averages using the simpler end-point definition.
 
 
-
 # Let’s create a user defined function that will calculate the moving average for any vector of 
 # numbers, and the user can choose what the size of the moving window will be (i.e. whether 
 # it will be a 1-year average, 5-year average, 10-year average, etc.).
+
 # -Define a 5 year average as the average over a given year and the 4 years prior.
 # -Construct 5 year averages from the annual data. Construct 10 & 20-year averages.
 # -Plot the different averages and describe what differences you see and why.
 
+# data = seq(1,20)
+# i = 10
+# moving_window = 5
 
+calc_rolling_avg = function(data, moving_window = 5){
+  result = rep(NA, length(data))
+  for (i in seq(from = moving_window, to = length(result))){ # skip the elems preceding the length of the moving window
+      result[i] = mean(data[seq( from = (i - moving_window + 1), to = i )])
+  }
+  return(result)
+}
 
+head(temp_anomaly)
+temp_anomaly$avg_5_yr = calc_rolling_avg(temp_anomaly$No_Smoothing)
+temp_anomaly$avg_10_yr = calc_rolling_avg(temp_anomaly$No_Smoothing, moving_window = 10)
+head(temp_anomaly) # something off here - avg_5_yr and avg_10_yr not found
+
+plot(No_Smoothing ~ Year, data = temp_anomaly, type='l')
+lines(avg_5_yr ~ Year, data = temp_anomaly, col="red", lwd = 2)
+lines(avg_10_yr ~ Year, data = temp_anomaly, col="green", lwd = 2)
 
 # Exercise 8.1
 # Calculate the 10-year and 20-year rolling averages of the temperature anomaly data using our new 
@@ -192,6 +276,9 @@ plot_time_series()
 # moving average where the reference year was at the midpoint of the moving window, rather than 
 # the endpoint of the moving window?
 
+# top of my ice core source fxn
+source("my_functions.r")
+
 #Do you see the advantage of this? Once your rolling average user defined function has been 
 # written, you can repeat this type of calculation on any of your diverse datasets with a 
 # very easy-to-use line of code. To use this function in future code, you can copy and paste 
@@ -199,3 +286,6 @@ plot_time_series()
 # and import that script at the top of any new R scripts that you build using the source() function. 
 # If you were really ambitious, you could put your function into a time series analysis package 
 # and make it available on CRAN.
+
+
+
